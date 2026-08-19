@@ -1,0 +1,42 @@
+@startuml
+
+class Vehiculo {
+  # modelo: String
+  # año: int
+  # velocidad: double
+  + Vehiculo(modelo, año)
+  + acelerar(): void
+  + frenar(): void
+  + obtenerModelo(): String
+}
+
+class Auto {
+  - puertas: int
+  + Auto(modelo, año, puertas)
+  + obtenerPuertas(): int
+}
+
+class Moto {
+  - tieneSidecar: boolean
+  + Moto(modelo, año)
+  + agregarSidecar(): void
+}
+
+class Camion {
+  - cargaMaxima: double
+  + Camion(modelo, año, carga)
+  + cargar(peso): void
+}
+
+class AutoDeportivo {
+  - velocidadMaxima: double
+  + AutoDeportivo(modelo, año, puertas, velMax)
+  + turbo(): void
+}
+
+Vehiculo <|-- Auto
+Vehiculo <|-- Moto
+Vehiculo <|-- Camion
+Auto <|-- AutoDeportivo
+
+@enduml
