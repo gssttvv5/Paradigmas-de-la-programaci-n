@@ -25,7 +25,7 @@ class Gerente {
 class Supervisor {
   + Supervisor(nombre: String, cedula: String, sueldoBase: double)
   + calcularSueldo() : double
-  + obtenerDetalles() : String
+  + obtenerDetalles() : String7
 }
 
 class Obrero {
