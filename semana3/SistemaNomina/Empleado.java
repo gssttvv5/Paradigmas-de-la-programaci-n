@@ -1,4 +1,4 @@
-package SistemaNomina;
+package semana3.SistemaNomina;
 
 public abstract class Empleado {
     protected String nombre;

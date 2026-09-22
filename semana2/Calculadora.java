@@ -1,3 +1,5 @@
+package semana2;
+
 public class Calculadora {
 
     public int sumar(int a, int b){

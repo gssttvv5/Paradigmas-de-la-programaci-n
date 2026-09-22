@@ -24,7 +24,6 @@ public class Ejemplo1 {
         CuentaBancaria cuenta = new CuentaBancaria();
         double interes = cuenta.calcularInteres(saldo, meses);
         System.out.println("Interés: " + interes);
-       
     }
 }
 class CuentaBancaria {
@@ -38,5 +37,44 @@ class CuentaBancaria {
             System.out.println("Error: " + e.getMessage());
             return 0.0;
         }
+    }
+}
+public void procesarArchivo(String archivo) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(archivo);
+            // ... procesar ...
+        } catch (FileNotFoundException e) {
+            System.out.println("No encontrado: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error I/O: " + e.getMessage());
+        } finally {
+            // SIEMPRE se ejecuta - limpiar recursos
+            if (fis != null)
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                }
+        }
+    }
+    class SaldoInsuficienteException extends Exception {
+    private double saldoRequerido;
+    private double saldoDisponible;
+
+    public SaldoInsuficienteException(
+            double requerido, double disponible) {
+        super("Requiere: $" + requerido +
+              ", Disponible: $" + disponible);
+
+        this.saldoRequerido = requerido;
+        this.saldoDisponible = disponible;
+    }
+
+    public double getSaldoRequerido() {
+        return saldoRequerido;
+    }
+
+    public double getSaldoDisponible() {
+        return saldoDisponible;
     }
 }

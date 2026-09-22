@@ -1,4 +1,4 @@
-package SistemaNomina;
+package semana3.SistemaNomina;
 
 public class Obrero extends Empleado {
 

@@ -1,3 +1,5 @@
+package semana3;
+
 abstract class Figura {
 
     abstract double area();

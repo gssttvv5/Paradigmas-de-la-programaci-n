@@ -1,3 +1,5 @@
+package semana2;
+
 public class EjemPolimorfismo {
     public static void main(String[] args) {
         Triangulo fig = new Triangulo();
@@ -28,7 +30,7 @@ class Figura {
 class Circulo extends Figura {
     @Override
     public void dibujar(){
-        System.out.println("Dibujando triangulo");
+        System.out.println("Dibujando un circulo");
     }
 }
 
