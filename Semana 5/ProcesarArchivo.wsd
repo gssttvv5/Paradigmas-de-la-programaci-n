@@ -1,0 +1,5 @@
+@startuml
+class ProcesarArchivo {
+  + procesarArchivo(archivo: String): void
+}
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class Ejemplo {
+  + procesarArchivo(archivo: String): void
+  + {static} main(args: String[]): void
+}
+@enduml
