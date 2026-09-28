@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Aspirante" as aspirante
+actor "Reclutador" as reclutador
+actor "Servicio de Correo\nExterno (API)" as correoExterno
+
+rectangle "Límite del Sistema TalentTrack" {
+  usecase "Registrar Perfil\n(Datos Personales,\nEstudios, CV PDF)" as UC1
+  usecase "Buscar Ofertas de Empleo" as UC2
+  usecase "Postularse a Vacante(s)" as UC3
+  
+  usecase "Dar de Alta Oferta de Trabajo" as UC4
+  usecase "Modificar Oferta de Trabajo" as UC5
+  usecase "Dar de Baja Oferta de Trabajo" as UC6
+  
+  usecase "Evaluar Postulación de\nCandidato" as UC7
+  usecase "Agendar Entrevista Técnica" as UC8
+  usecase "Registrar Calificaciones y\nComentarios de Fase" as UC9
+  
+  usecase "Enviar Notificación\nAutomatizada por Correo\n(API)" as UC10
+}
+
+' Relaciones de los Actores Principales
+aspirante -- UC1
+aspirante -- UC2
+aspirante -- UC3
+
+UC4 -- reclutador
+UC5 -- reclutador
+UC6 -- reclutador
+UC7 -- reclutador
+UC8 -- reclutador
+UC9 -- reclutador
+
+' Relación del Actor Secundario / Sistema Externo
+UC10 -- correoExterno
+
+' Relaciones de Dependencia (Includes)
+UC3 .> UC10 : <<include>>\n"Preseleccionado",\n"Rechazado"
+UC7 .> UC10 : <<include>>\nState changes:\n"En entrevista"
+UC8 .> UC10 : <<include>>\nState changes:\n"En entrevista"
+UC9 .> UC10 : <<include>>\nState changes:\n"Rechazado",\n"Siguiente Fase", etc.
+
+@enduml

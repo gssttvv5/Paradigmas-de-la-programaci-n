@@ -1,0 +1,47 @@
+@startuml
+title UML Sequence Diagram: Job Application Process
+
+actor "Applicant" as applicant
+participant "User Interface" as ui
+participant "Controller" as controller
+database "Database" as db
+participant "Email Service" as email
+
+activate applicant
+
+applicant -> ui : searchJobs()
+activate ui
+ui --> applicant : displayJobs()
+
+applicant -> ui : Select Job & Apply\nselectJob(jobId)
+ui --> applicant : displayApplicationForm(jobId)
+
+applicant -> ui : submitApplication(jobId, userInfo, resume, coverLetter)
+note right of ui: Validates input
+
+ui -> controller : createApplication(jobId, userInfo, resume, coverLetter)
+activate controller
+
+controller -> db : checkCandidate(email)
+activate db
+db --> controller : candidateExists(true/false)
+
+controller -> db : saveApplication(appData)
+note right of db: Saves candidate, application,\nand resume records.
+db --> controller : applicationSaved(appId)\nApplication Saved
+deactivate db
+
+controller -> email : sendConfirmationEmail(candidateEmail, jobId)
+activate email
+email --> controller : emailQueued()
+deactivate email
+
+controller --> ui : applicationSuccess()
+deactivate controller
+
+note right of ui: e.g., "Thank you for your application."
+ui --> applicant : showConfirmation()
+deactivate ui
+
+deactivate applicant
+@enduml
