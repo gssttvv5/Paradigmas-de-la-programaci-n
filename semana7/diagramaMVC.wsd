@@ -1,0 +1,35 @@
+@startuml
+!theme plain
+skinparam style strictuml
+
+actor "Usuario" as user
+boundary "Vista\n(JavaFX / FXML)" as vista
+control "Controlador\n(Clase Java)" as controlador
+entity "Modelo\n(Clases / DAO)" as modelo
+database "Base de Datos\n(MySQL)" as db
+
+user -> vista : 1. Interactúa (Ej. clic en "Registrar")
+activate vista
+
+vista -> controlador : 2. Envía evento (Captura datos del formulario)
+activate controlador
+
+controlador -> modelo : 3. Procesa y solicita datos (Ejecuta lógica de negocio)
+activate modelo
+
+modelo -> db : 4. Ejecuta consulta SQL (INSERT / SELECT)
+activate db
+
+db --> modelo : 5. Retorna confirmación o registros
+deactivate db
+
+modelo --> controlador : 6. Devuelve datos (Respuestas de la BD)
+deactivate modelo
+
+controlador --> vista : 7. Actualiza pantalla (Limpia formulario y crea alerta)
+deactivate controlador
+
+vista --> user : 8. Muestra respuesta visual (Mensaje de éxito)
+deactivate vista
+
+@enduml
