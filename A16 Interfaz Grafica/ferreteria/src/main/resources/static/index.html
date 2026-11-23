@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ferretería - Control de Inventario</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; }
+        header { background: #1e3a5f; color: white; padding: 15px 25px; border-radius: 8px; }
+        .container { max-width: 960px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .card { border: 1px solid #ddd; padding: 15px; border-radius: 6px; background: #fafafa; }
+        .card h3 { margin-top: 0; color: #1e3a5f; font-size: 16px; }
+        input { width: 92%; padding: 7px; margin: 4px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #1e3a5f; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; margin-top: 6px; }
+        button:hover { background: #2c5282; }
+        button.danger { background: #c53030; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #1e3a5f; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ferretería — Control de Inventario</h1>
+    </header>
+    <div class="container">
+        <button onclick="listarProductos()">Listar Artículos</button>
+
+        <div class="grid" style="margin-top:15px;">
+            <div class="card">
+                <h3>Buscar por ID</h3>
+                <input id="buscarId" type="number" placeholder="ID del artículo">
+                <button onclick="buscarPorId()">Buscar</button>
+                <p id="resultadoBusqueda"></p>
+            </div>
+
+            <div class="card">
+                <h3>Insertar Artículo</h3>
+                <input id="insNombre" type="text" placeholder="Nombre del artículo">
+                <input id="insPrecio" type="number" step="0.01" placeholder="Precio">
+                <input id="insExistencia" type="number" placeholder="Existencia">
+                <button onclick="insertarProducto()">Guardar</button>
+            </div>
+
+            <div class="card">
+                <h3>Actualizar Artículo</h3>
+                <input id="actId" type="number" placeholder="ID a actualizar">
+                <input id="actNombre" type="text" placeholder="Nuevo nombre">
+                <input id="actPrecio" type="number" step="0.01" placeholder="Nuevo precio">
+                <input id="actExistencia" type="number" placeholder="Nueva existencia">
+                <button onclick="actualizarProducto()">Actualizar</button>
+            </div>
+
+            <div class="card">
+                <h3>Eliminar Artículo</h3>
+                <input id="delId" type="number" placeholder="ID a eliminar">
+                <button class="danger" onclick="eliminarProducto()">Eliminar</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre Artículo</th><th>Precio</th><th>Existencia</th></tr>
+            </thead>
+            <tbody id="tablaArticulos"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const baseURL = "http://localhost:8081/api/articulos";
+
+        async function listarProductos() {
+            const res = await fetch(baseURL);
+            const data = await res.json();
+            const tbody = document.getElementById("tablaArticulos");
+            tbody.innerHTML = data.map(a =>
+                `<tr><td>${a.id}</td><td>${a.nombreArticulo}</td><td>$${a.precio}</td><td>${a.existencia}</td></tr>`
+            ).join("");
+        }
+
+        async function buscarPorId() {
+            const id = document.getElementById("buscarId").value;
+            const res = await fetch(`${baseURL}/${id}`);
+            const p = document.getElementById("resultadoBusqueda");
+            if (res.ok) {
+                const a = await res.json();
+                p.innerText = `#${a.id}: ${a.nombreArticulo} ($${a.precio}) — Stock: ${a.existencia}`;
+            } else {
+                p.innerText = "Producto no encontrado";
+            }
+        }
+
+        async function insertarProducto() {
+            const body = {
+                nombreArticulo: document.getElementById("insNombre").value,
+                precio: parseFloat(document.getElementById("insPrecio").value),
+                existencia: parseInt(document.getElementById("insExistencia").value)
+            };
+            const res = await fetch(baseURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) { alert("Producto agregado correctamente"); listarProductos(); }
+        }
+
+        async function actualizarProducto() {
+            const id = document.getElementById("actId").value;
+            const body = {
+                nombreArticulo: document.getElementById("actNombre").value,
+                precio: parseFloat(document.getElementById("actPrecio").value),
+                existencia: parseInt(document.getElementById("actExistencia").value)
+            };
+            const res = await fetch(`${baseURL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) { alert("Producto actualizado correctamente"); listarProductos(); }
+        }
+
+        async function eliminarProducto() {
+            const id = document.getElementById("delId").value;
+            const res = await fetch(`${baseURL}/${id}`, { method: "DELETE" });
+            alert(await res.text());
+            listarProductos();
+        }
+
+        listarProductos();
+    </script>
+</body>
+</html>
